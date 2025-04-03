@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 
-// Definindo o tipo do evento
 type EventType = {
   name: string;
   date: string;
   category: string;
+  description: string;
+  location: string;
+  imageUrl?: string;
 };
 
-// Componente principal - CORRIGIDO
-export function EventList({ route }: { route: { params: { events: EventType[] } } }) {
-  const { events } = route.params;
-
+// Modifique o componente para receber os eventos diretamente como prop
+export function EventList({ events }: { events: EventType[] }) {
   return (
     <View style={styles.container}>
       <FlatList
@@ -22,6 +22,8 @@ export function EventList({ route }: { route: { params: { events: EventType[] } 
             <Text style={styles.eventName}>{item.name}</Text>
             <Text style={styles.eventText}>Data: {item.date}</Text>
             <Text style={styles.eventText}>Categoria: {item.category}</Text>
+            {item.description && <Text style={styles.eventText}>Descrição: {item.description}</Text>}
+            {item.location && <Text style={styles.eventText}>Local: {item.location}</Text>}
           </View>
         )}
         ListEmptyComponent={
@@ -31,6 +33,7 @@ export function EventList({ route }: { route: { params: { events: EventType[] } 
     </View>
   );
 }
+
 
 // Estilos - CORRIGIDOS
 const styles = StyleSheet.create({
