@@ -12,7 +12,10 @@ const Stack = createStackNavigator();
 type EventType = {
   name: string;
   date: string;
-  category: string; // Mantemos apenas esses 3 campos
+  category: string;
+  description: string;       // Novo campo
+  location: string;          // Novo campo
+  imageUrl?: string;         // Campo opcional
 };
 
 
