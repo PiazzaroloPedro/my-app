@@ -10,7 +10,6 @@ type EventType = {
   imageUrl?: string;
 };
 
-// Modifique o componente para receber os eventos diretamente como prop
 export function EventList({ events }: { events: EventType[] }) {
   return (
     <View style={styles.container}>
@@ -34,8 +33,6 @@ export function EventList({ events }: { events: EventType[] }) {
   );
 }
 
-
-// Estilos - CORRIGIDOS
 const styles = StyleSheet.create({
   container: {
     flex: 1,

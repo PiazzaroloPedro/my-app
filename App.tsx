@@ -1,13 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useState } from 'react';
 import { PaginaInicial } from './pages/PaginaInicial';
 import { TeladeLogin } from './pages/TeladeLogin';
 import { FormEvents } from './pages/Formulario';
 import { EventList } from './pages/Eventos';
 
-// Definindo os tipos de navegação
 type RootStackParamList = {
   PaginaInicial: undefined;
   TeladeLogin: undefined;
@@ -17,7 +16,6 @@ type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-// Tipo do Evento (mantendo consistência com o formulário)
 type EventType = {
   name: string;
   date: string;
@@ -30,12 +28,11 @@ type EventType = {
 export default function App() {
   const [listEvents, setListEvents] = useState<EventType[]>([]);
 
-  const handleEvents = (newEvent: EventType) => {
+  const handleAddEvent = (newEvent: EventType, navigation: any) => {
     const updatedEvents = [...listEvents, newEvent];
     setListEvents(updatedEvents);
     console.log('Evento adicionado:', newEvent);
-    
-    // Opcional: Adicione aqui qualquer lógica pós-criação do evento
+    navigation.navigate('ListadeEventos'); // Navega automaticamente para a lista
   };
 
   return (
@@ -44,37 +41,23 @@ export default function App() {
         initialRouteName="PaginaInicial"
         screenOptions={{ 
           headerShown: false,
-          gestureEnabled: true // Habilita gestos de navegação
+          gestureEnabled: true
         }}
       >
-        {/* Tela Splash/Inicial */}
-        <Stack.Screen 
-          name="PaginaInicial" 
-          component={PaginaInicial} 
-        />
-        
-        {/* Tela de Login */}
-        <Stack.Screen 
-          name="TeladeLogin" 
-          component={TeladeLogin} 
-        />
-        
-        {/* Tela de Formulário */}
+        <Stack.Screen name="PaginaInicial" component={PaginaInicial} />
+        <Stack.Screen name="TeladeLogin" component={TeladeLogin} />
         <Stack.Screen name="Formulario">
           {(props) => (
             <FormEvents 
-              {...props} 
-              handleEvents={handleEvents}
-              navigation={props.navigation} // Passando a navegação para o formulário
+              {...props}
+              handleAddEvent={(event) => handleAddEvent(event, props.navigation)} 
             />
           )}
         </Stack.Screen>
-        
-        {/* Tela de Listagem de Eventos */}
         <Stack.Screen 
           name="ListadeEventos" 
           options={{ 
-            headerShown: true, // Mostra header apenas nesta tela
+            headerShown: true,
             title: 'Meus Eventos',
             headerBackTitle: 'Voltar'
           }}
@@ -82,7 +65,6 @@ export default function App() {
           {(props) => <EventList {...props} events={listEvents} />}
         </Stack.Screen>
       </Stack.Navigator>
-      
       <StatusBar style="dark" />
     </NavigationContainer>
   );

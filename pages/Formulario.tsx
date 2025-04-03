@@ -2,15 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-const categories = [
-  'Festa',
-  'Conferência',
-  'Esportivo',
-  'Cultural',
-  'Educativo',
-  'Social'
-];
-
+// Adicione estas definições
 type EventType = {
   name: string;
   date: string;
@@ -20,11 +12,20 @@ type EventType = {
   imageUrl?: string;
 };
 
-export function FormEvents({ handleEvents, navigation }: { 
-  handleEvents: (event: EventType) => void;
+const categories = [
+  'Festa',
+  'Conferência',
+  'Esportivo',
+  'Cultural',
+  'Educativo',
+  'Social'
+];
+
+export function FormEvents({ handleAddEvent, navigation }: { 
+  handleAddEvent: (event: EventType, navigation: any) => void;
   navigation: any;
 }) {
-  const [event, setEvent] = useState<EventType>({
+  const [event, setEvent] = useState({
     name: '',
     date: '',
     category: categories[0],
@@ -34,16 +35,14 @@ export function FormEvents({ handleEvents, navigation }: {
   });
 
   const handleSubmit = () => {
-    // Validação básica
     if (!event.name || !event.date || !event.location) {
-      Alert.alert('Erro', 'Preencha os campos obrigatórios');
+      Alert.alert('Erro', 'Preencha os campos obrigatórios (*)');
       return;
     }
 
-    handleEvents(event);
-    Alert.alert('Sucesso', 'Evento criado com sucesso!');
+    handleAddEvent(event, navigation);
     
-    // Limpa o formulário após envio
+    // Limpa o formulário
     setEvent({
       name: '',
       date: '',
@@ -52,16 +51,12 @@ export function FormEvents({ handleEvents, navigation }: {
       location: '',
       imageUrl: ''
     });
-    
-    // Opcional: navegar para a lista de eventos
-    // navigation.navigate('ListadeEventos');
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>CRIAR EVENTO</Text>
 
-      {/* Nome (Obrigatório) */}
       <Text style={styles.label}>Nome do Evento *</Text>
       <TextInput
         style={styles.input}
@@ -70,7 +65,6 @@ export function FormEvents({ handleEvents, navigation }: {
         placeholder="Ex: Festa de Aniversário"
       />
 
-      {/* Data (Obrigatório) */}
       <Text style={styles.label}>Data (DD/MM/AAAA) *</Text>
       <TextInput
         style={styles.input}
@@ -79,7 +73,6 @@ export function FormEvents({ handleEvents, navigation }: {
         placeholder="Ex: 25/12/2025"
       />
 
-      {/* Local (Obrigatório) */}
       <Text style={styles.label}>Local *</Text>
       <TextInput
         style={styles.input}
@@ -88,7 +81,6 @@ export function FormEvents({ handleEvents, navigation }: {
         placeholder="Ex: Centro de Convenções"
       />
 
-      {/* Descrição */}
       <Text style={styles.label}>Descrição</Text>
       <TextInput
         style={[styles.input, { height: 100 }]}
@@ -98,7 +90,6 @@ export function FormEvents({ handleEvents, navigation }: {
         multiline
       />
 
-      {/* URL da Imagem (Opcional) */}
       <Text style={styles.label}>URL da Imagem (Opcional)</Text>
       <TextInput
         style={styles.input}
@@ -107,7 +98,6 @@ export function FormEvents({ handleEvents, navigation }: {
         placeholder="Ex: https://exemplo.com/imagem.jpg"
       />
 
-      {/* Categoria */}
       <Text style={styles.label}>Categoria</Text>
       <View style={styles.pickerContainer}>
         <Picker
