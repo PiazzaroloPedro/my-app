@@ -9,20 +9,20 @@ import { EventList } from './pages/Eventos';
 
 const Stack = createStackNavigator();
 
-// Definição do tipo de evento
 type EventType = {
   name: string;
   date: string;
-  hour: string;
-  category: string;
+  category: string; // Mantemos apenas esses 3 campos
 };
+
 
 export default function App() {
   const [listEvents, setListEvents] = useState<EventType[]>([]);
 
-  function handleEvents(newEvent: EventType) {
-    setListEvents((prevList) => [...prevList, newEvent]);
-  }
+  const handleEvents = (newEvent: EventType) => {
+    setListEvents([...listEvents, newEvent]);
+    console.log('Eventos atualizados:', [...listEvents, newEvent]); // Para debug
+  };
 
   return (
     <NavigationContainer>
@@ -32,7 +32,12 @@ export default function App() {
         <Stack.Screen name="Formulario">
           {(props) => <FormEvents {...props} handleEvents={handleEvents} />}
         </Stack.Screen>
-        
+        <Stack.Screen 
+          name="ListadeEventos"
+          options={{ title: 'Meus Eventos' }}
+        >
+          {(props) => <EventList {...props} route={{ params: { events: listEvents } }} />}
+        </Stack.Screen>
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
